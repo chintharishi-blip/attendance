@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ABC College ERP Portal</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#1a7a3c;--green-light:#e8f5ee;--green-mid:#2e9d52;--green-dark:#145c2d;
+  --green2:#22c55e;--sidebar-w:220px;
+  --bg:#f0f4f0;--card:#fff;--border:#e2e8e4;--text:#1a2e22;--muted:#6b8a76;
+  --red:#e53935;--amber:#f59e0b;--blue:#2563eb;
+  --shadow:0 1px 4px rgba(0,0,0,.08);
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--text);background:var(--bg);min-height:100vh}
+/* ── HEADER ── */
+.header{background:var(--green);color:#fff;padding:10px 18px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.logo-badge{background:#fff;color:var(--green);font-weight:700;font-size:12px;padding:4px 9px;border-radius:5px;letter-spacing:1px}
+.header-title{font-size:15px;font-weight:600}
+.header-sub{font-size:11px;opacity:.8}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:12px}
+.header-right .user-badge{background:rgba(255,255,255,.18);padding:5px 12px;border-radius:20px;font-weight:500}
+.header-right button{background:rgba(255,255,255,.2);border:none;color:#fff;padding:5px 12px;border-radius:5px;cursor:pointer;font-size:12px;font-family:inherit;transition:background .15s}
+.header-right button:hover{background:rgba(255,255,255,.35)}
+/* ── MARQUEE ── */
+.marquee{background:#145c2d;color:#90ee90;font-size:11px;padding:4px 0;overflow:hidden}
+.marquee span{display:inline-block;animation:scroll 30s linear infinite;white-space:nowrap;padding-left:100%}
+@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
+/* ── LOGIN ── */
+.login-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:40px 20px;background:linear-gradient(135deg,#e8f5ee 0%,#f0f7f3 50%,#dff0e6 100%)}
+.login-logo{text-align:center}
+.login-logo .abc-big{background:var(--green);color:#fff;display:inline-block;padding:12px 28px;border-radius:10px;font-weight:700;font-size:22px;letter-spacing:2px;margin-bottom:8px;box-shadow:0 4px 16px rgba(26,122,60,.25)}
+.login-logo p{color:var(--muted);font-size:13px}
+.login-cards{display:flex;gap:20px;flex-wrap:wrap;justify-content:center}
+.login-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:28px 24px;width:240px;text-align:center;box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s}
+.login-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.1)}
+.login-card .emoji{font-size:36px;margin-bottom:10px}
+.login-card h3{color:var(--green-dark);margin-bottom:16px;font-size:15px;font-weight:600}
+.login-card input{width:100%;border:1px solid var(--border);border-radius:7px;padding:8px 11px;margin-bottom:10px;font-size:13px;font-family:inherit;outline:none;transition:border .15s}
+.login-card input:focus{border-color:var(--green-mid)}
+.login-card .login-btn{width:100%;background:var(--green);color:#fff;border:none;padding:9px;border-radius:7px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;transition:background .15s}
+.login-card .login-btn:hover{background:var(--green-dark)}
+.hint{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6}
+.err{color:var(--red);font-size:12px;margin-top:6px;min-height:16px}
+/* ── LAYOUT ── */
+.app-layout{display:flex;flex:1;min-height:calc(100vh - 85px)}
+.sidebar{width:var(--sidebar-w);background:#fff;border-right:1px solid var(--border);flex-shrink:0;overflow-y:auto;padding:8px 0}
+.sidebar h4{color:var(--muted);font-size:10px;font-weight:600;letter-spacing:1.5px;padding:10px 16px 4px;text-transform:uppercase}
+.sidebar a{display:flex;align-items:center;gap:9px;padding:9px 16px;font-size:13px;cursor:pointer;color:var(--text);border-radius:0;transition:background .12s;border-left:3px solid transparent}
+.sidebar a:hover{background:var(--green-light);color:var(--green)}
+.sidebar a.active{background:var(--green-light);color:var(--green);font-weight:600;border-left-color:var(--green)}
+.sidebar a .icon{font-size:15px;width:20px;text-align:center}
+.content{flex:1;padding:22px;overflow-y:auto;background:var(--bg)}
+/* ── COMMON UI ── */
+.section-title{font-size:17px;font-weight:700;color:var(--green-dark);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:2px;background:linear-gradient(to right,var(--green-light),transparent)}
+.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px;box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--green);color:#fff;padding:9px 11px;text-align:left;font-weight:500;font-size:12px}
+th:first-child{border-radius:6px 0 0 6px}
+th:last-child{border-radius:0 6px 6px 0}
+td{padding:9px 11px;border-bottom:1px solid #f0f4f0}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--green-light)}
+.btn{padding:7px 15px;border-radius:7px;border:none;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit;transition:all .15s}
+.btn-green{background:var(--green);color:#fff}.btn-green:hover{background:var(--green-dark)}
+.btn-red{background:var(--red);color:#fff}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}.btn-outline:hover{background:var(--bg)}
+.btn-sm{padding:4px 10px;font-size:11px}
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-green{background:var(--green-light);color:var(--green)}
+.badge-red{background:#fce8e8;color:var(--red)}
+.badge-amber{background:#fef3e2;color:#b45309}
+.badge-blue{background:#eff6ff;color:var(--blue)}
+.badge-purple{background:#f3e8ff;color:#7c3aed}
+.pct.ok{color:var(--green);font-weight:600}.pct.warn{color:#b45309;font-weight:600}.pct.bad{color:var(--red);font-weight:600}
+.form-group{margin-bottom:13px}
+.form-group label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:500}
+.form-group input,.form-group textarea,.form-group select{width:100%;border:1px solid var(--border);border-radius:7px;padding:8px 11px;font-size:13px;font-family:inherit;outline:none;transition:border .15s;background:#fff}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--green-mid)}
+.form-group textarea{resize:vertical;min-height:72px}
+.form-row{display:flex;gap:12px}.form-row .form-group{flex:1}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px;margin-bottom:18px}
+.stat{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;box-shadow:var(--shadow)}
+.stat .num{font-size:24px;font-weight:700;color:var(--green)}
+.stat .lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:18px;overflow-x:auto}
+.tab{padding:9px 18px;cursor:pointer;font-size:13px;border-bottom:3px solid transparent;white-space:nowrap;font-weight:500;margin-bottom:-2px;transition:color .15s}
+.tab.active{border-bottom-color:var(--green);color:var(--green);font-weight:600}
+.assign-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:15px;margin-bottom:12px}
+.assign-card .meta{font-size:11px;color:var(--muted);margin-top:4px}
+.star-row{display:flex;gap:4px;font-size:22px;cursor:pointer}
+.star{color:#ddd;transition:color .1s}.star.on{color:#f5a623}
+.att-check{width:26px;height:26px;border:1px solid var(--border);border-radius:5px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .15s}
+.att-check.present{background:var(--green);color:#fff;border-color:var(--green)}
+.att-check.absent{background:#fce8e8;border-color:#e0a0a0;color:var(--red)}
+.marks-input{width:60px;border:1px solid var(--border);border-radius:5px;padding:4px 7px;font-size:13px;text-align:center;font-family:'JetBrains Mono',monospace}
+.profile-section{border-left:3px solid var(--green);padding-left:12px;margin-bottom:12px}
+.profile-section .lbl{font-size:11px;color:var(--muted)}
+/* ── AI CHATBOT ── */
+#chatbot-fab{position:fixed;bottom:28px;right:28px;width:54px;height:54px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;box-shadow:0 4px 16px rgba(26,122,60,.4);z-index:1000;transition:transform .2s}
+#chatbot-fab:hover{transform:scale(1.08)}
+#chatbot-panel{position:fixed;bottom:94px;right:28px;width:320px;background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.16);z-index:999;display:none;flex-direction:column;overflow:hidden;border:1px solid var(--border)}
+#chatbot-panel.open{display:flex}
+.chat-header{background:var(--green);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:10px}
+.chat-header .dot{width:8px;height:8px;background:#22c55e;border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;max-height:320px;min-height:200px}
+.msg-bot,.msg-user{max-width:85%;padding:9px 12px;border-radius:10px;font-size:12.5px;line-height:1.5}
+.msg-bot{background:var(--green-light);color:var(--green-dark);align-self:flex-start;border-radius:3px 10px 10px 10px}
+.msg-user{background:var(--green);color:#fff;align-self:flex-end;border-radius:10px 3px 10px 10px}
+.chat-input-row{display:flex;border-top:1px solid var(--border);padding:8px}
+.chat-input-row input{flex:1;border:none;outline:none;font-size:12.5px;font-family:inherit;padding:4px 8px}
+.chat-input-row button{background:var(--green);color:#fff;border:none;border-radius:6px;padding:6px 12px;cursor:pointer;font-size:12px}
+/* ── QR ATTENDANCE ── */
+.qr-box{width:180px;height:180px;margin:0 auto;background:linear-gradient(135deg,var(--green-light),#fff);border:3px solid var(--green);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:600;color:var(--green);cursor:pointer;transition:transform .15s;position:relative;overflow:hidden}
+.qr-box:hover{transform:scale(1.03)}
+.qr-inner{font-size:80px;line-height:1}
+.qr-scan-anim{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(to right,transparent,var(--green),transparent);animation:qrscan 2s linear infinite}
+@keyframes qrscan{0%{top:0}100%{top:100%}}
+.geo-badge{display:inline-flex;align-items:center;gap:6px;background:var(--green-light);color:var(--green);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600}
+/* ── CHARTS ── */
+.chart-bar-wrap{display:flex;flex-direction:column;gap:8px}
+.chart-bar-row{display:flex;align-items:center;gap:10px;font-size:12px}
+.chart-bar-row .sub-label{width:40px;font-weight:600;color:var(--green-dark);font-size:11px}
+.chart-bar-outer{flex:1;height:18px;background:#f0f4f0;border-radius:20px;overflow:hidden}
+.chart-bar-inner{height:100%;border-radius:20px;transition:width 1s ease;background:linear-gradient(to right,var(--green-mid),var(--green2))}
+.chart-bar-inner.warn{background:linear-gradient(to right,#f59e0b,#fbbf24)}
+.chart-bar-inner.bad{background:linear-gradient(to right,var(--red),#f87171)}
+.chart-bar-val{width:36px;text-align:right;font-weight:600;font-family:'JetBrains Mono',monospace;font-size:11px}
+/* AI suggestions */
+.ai-tip{background:linear-gradient(135deg,#e8f5ee,#f0fdf4);border:1px solid #86efac;border-radius:10px;padding:13px;margin-bottom:10px;display:flex;gap:10px;align-items:flex-start}
+.ai-tip .ai-icon{font-size:20px;flex-shrink:0}
+.ai-tip .ai-text{font-size:12.5px;color:var(--green-dark);line-height:1.6}
+.ai-tip .ai-text strong{font-weight:700}
+/* HEATMAP */
+.heatmap-grid{display:grid;grid-template-columns:80px repeat(5,1fr);gap:1px;background:var(--border);border-radius:8px;overflow:hidden}
+.heatmap-cell{padding:8px 6px;background:#fff;font-size:11px;text-align:center;font-weight:500}
+.heatmap-cell.header{background:var(--green);color:#fff;font-size:11px}
+.heatmap-cell.h100{background:#16a34a;color:#fff}
+.heatmap-cell.h80{background:#4ade80;color:#166534}
+.heatmap-cell.h60{background:#bbf7d0;color:#166534}
+.heatmap-cell.h40{background:#fef9c3;color:#854d0e}
+.heatmap-cell.hlow{background:#fecaca;color:#991b1b}
+/* TIMETABLE */
+.tt-grid{display:grid;grid-template-columns:60px repeat(6,1fr);gap:2px;font-size:12px}
+.tt-cell{padding:8px 6px;border-radius:6px;text-align:center;background:#fff;border:1px solid var(--border)}
+.tt-cell.header{background:var(--green);color:#fff;font-weight:600;border:none}
+.tt-cell.has-class{background:var(--green-light);color:var(--green-dark);font-weight:600;cursor:pointer}
+.tt-cell.has-class:hover{background:#bbf7d0}
+.tt-cell.exam-cell{background:#fef3e2;color:#b45309;font-weight:600}
+.tt-cell.break-cell{background:#f9fafb;color:var(--muted)}
+/* NOTIFICATIONS */
+.notif-item{display:flex;gap:12px;padding:12px;border-bottom:1px solid var(--border);align-items:flex-start}
+.notif-item:last-child{border-bottom:none}
+.notif-icon{font-size:20px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:8px;flex-shrink:0}
+.notif-icon.exam{background:#fef3e2}.notif-icon.attend{background:var(--green-light)}.notif-icon.assign{background:#eff6ff}
+.notif-text{font-size:13px;line-height:1.5}
+.notif-time{font-size:11px;color:var(--muted);margin-top:2px}
+/* PLAGIARISM */
+.plagiarism-bar{height:10px;border-radius:20px;background:#f0f4f0;margin:6px 0;overflow:hidden}
+.plag-fill{height:100%;border-radius:20px}
+.plag-fill.safe{background:var(--green)}
+.plag-fill.moderate{background:var(--amber)}
+.plag-fill.high{background:var(--red)}
+/* RESPONSIVE */
+@media(max-width:640px){.sidebar{width:50px}.sidebar a .label-text{display:none}.form-row{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<!-- FAB AI Chatbot -->
+<div id="chatbot-fab" onclick="toggleChat()" title="AI Assistant">🤖</div>
+<div id="chatbot-panel">
+  <div class="chat-header">
+    <span style="font-size:18px">🤖</span>
+    <div><div style="font-weight:600;font-size:13px">AI Assistant</div><div style="font-size:11px;opacity:.8">Ask anything about your portal</div></div>
+    <div class="dot" style="margin-left:auto"></div>
+    <span onclick="toggleChat()" style="cursor:pointer;margin-left:8px;font-size:16px">✕</span>
+  </div>
+  <div class="chat-msgs" id="chat-msgs">
+    <div class="msg-bot">👋 Hi! I'm your ABC College AI Assistant. Ask me things like:<br>• "What is my attendance in OS?"<br>• "When is my next exam?"<br>• "Show my weak subjects"<br>• "How many assignments pending?"</div>
+  </div>
+  <div class="chat-input-row">
+    <input id="chat-in" placeholder="Type your question..." onkeydown="if(event.key==='Enter')sendChat()"/>
+    <button onclick="sendChat()">➤</button>
+  </div>
+</div>
+
+<!-- LOGIN PAGE -->
+<div id="login-page">
+  <div class="header">
+    <div class="logo-badge">ABC</div>
+    <div><div class="header-title">ABC College</div><div class="header-sub">ERP Student &amp; Staff Portal</div></div>
+  </div>
+  <div class="login-wrap">
+    <div class="login-logo">
+      <div class="abc-big">🎓 ABC COLLEGE</div>
+      <p>ERP Academic Portal — 2025–26</p>
+    </div>
+    <div class="login-cards">
+      <div class="login-card">
+        <div class="emoji">👩‍🏫</div>
+        <h3>Employee Login</h3>
+        <input id="t-user" placeholder="Username"/>
+        <input id="t-pass" type="password" placeholder="Password"/>
+        <button class="login-btn" onclick="doLogin('teacher')">LOGIN</button>
+        <div class="err" id="t-err"></div>
+        <div class="hint">
+          teacher1(OS) · teacher2(DIS) · teacher3(DMDA)<br>
+          teacher4(DAA) · teacher5(DS)<br>
+          Password: <strong>123</strong>
+        </div>
+      </div>
+      <div class="login-card">
+        <div class="emoji">👨‍🎓</div>
+        <h3>Student Login</h3>
+        <input id="s-user" placeholder="Username"/>
+        <input id="s-pass" type="password" placeholder="Password"/>
+        <button class="login-btn" onclick="doLogin('student')">LOGIN</button>
+        <div class="err" id="s-err"></div>
+        <div class="hint">
+          student1(Rishi) · student2(Varun) · student3(Akhil)<br>
+          student4(Kanishk) · student5(Hi)<br>
+          Password: <strong>1234</strong>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);text-align:center">ABC College — Powered by Smart ERP v2.0</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" style="display:none;flex-direction:column;min-height:100vh">
+  <div class="header">
+    <div class="logo-badge">ABC</div>
+    <div><div class="header-title">ABC College</div><div class="header-sub">Smart ERP Portal</div></div>
+    <div class="header-right">
+      <span id="welcome-name" class="user-badge"></span>
+      <button onclick="doLogout()">🚪 Logout</button>
+    </div>
+  </div>
+  <div class="marquee"><span>🔔 Welcome to ABC College Smart ERP Portal | Academic Year 2025–26 | Mid-1 Exams: 10–15 May 2026 | Assignment deadlines active | AI Analytics now live!</span></div>
+  <div class="app-layout">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="content" id="content"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════
+var role=null, currentUser=null;
+
+var teacherAccounts={
+  'teacher1':{pass:'123',name:'Prof. S. Rao',subject:'OS',fullSubject:'Operating Systems',empId:'EMP2024001',dept:'Computer Science'},
+  'teacher2':{pass:'123',name:'Prof. K. Patel',subject:'DIS',fullSubject:'Data & Information Systems',empId:'EMP2024002',dept:'Computer Science'},
+  'teacher3':{pass:'123',name:'Dr. M. Verma',subject:'DMDA',fullSubject:'Data Mining & Data Analytics',empId:'EMP2024003',dept:'Computer Science'},
+  'teacher4':{pass:'123',name:'Prof. A. Reddy',subject:'DAA',fullSubject:'Design & Analysis of Algorithms',empId:'EMP2024004',dept:'Computer Science'},
+  'teacher5':{pass:'123',name:'Dr. L. Singh',subject:'DS',fullSubject:'Data Structures',empId:'EMP2024005',dept:'Computer Science'},
+  // legacy
+  'hi':{pass:'123',name:'Prof. S. Rao',subject:'OS',fullSubject:'Operating Systems',empId:'EMP2024001',dept:'Computer Science'}
+};
+var studentAccounts={
+  'student1':{pass:'1234',name:'Rishi',fullName:'Chintha Rishikesh',rollNo:'21A91A0501',year:'III Year',section:'A'},
+  'student2':{pass:'1234',name:'Varun',fullName:'Varun Sharma',rollNo:'21A91A0502',year:'III Year',section:'A'},
+  'student3':{pass:'1234',name:'Akhil',fullName:'Akhil Reddy',rollNo:'21A91A0503',year:'III Year',section:'B'},
+  'student4':{pass:'1234',name:'Kanishk',fullName:'Kanishk Mehta',rollNo:'21A91A0504',year:'III Year',section:'B'},
+  'student5':{pass:'1234',name:'Hi',fullName:'Hi Student',rollNo:'21A91A0505',year:'III Year',section:'A'},
+  // legacy
+  'hello':{pass:'1234',name:'Rishi',fullName:'Chintha Rishikesh',rollNo:'21A91A0501',year:'III Year',section:'A'}
+};
+
+var students=[
+  {id:'21A91A0501',name:'Rishi (Rishikesh)'},
+  {id:'21A91A0502',name:'Varun Sharma'},
+  {id:'21A91A0503',name:'Akhil Reddy'},
+  {id:'21A91A0504',name:'Kanishk Mehta'},
+  {id:'21A91A0505',name:'Hi Student'},
+];
+var subjects=['Maths','OS','DIS','DMDA','DAA','DS'];
+var dates=['Apr 14','Apr 15','Apr 16','Apr 17','Apr 18','Apr 21','Apr 22','Apr 23','Apr 24','Apr 25'];
+var attData={};
+subjects.forEach(function(sub){
+  attData[sub]={};
+  dates.forEach(function(d){
+    attData[sub][d]={};
+    students.forEach(function(s){attData[sub][d][s.id]=Math.random()>0.22;});
+  });
+});
+
+var marksData={};
+var questionNames=['Q1 Unit 1','Q2 Unit 1','Q3 Unit 2','Q4 Unit 2','Q5 Unit 3'];
+students.forEach(function(s){
+  marksData[s.id]={};
+  // vary marks per subject
+  subjects.forEach(function(sub){
+    questionNames.forEach(function(q){
+      var base=(s.id==='21A91A0501')?8:((s.id==='21A91A0502')?7:((s.id==='21A91A0503')?6:((s.id==='21A91A0504')?9:5)));
+      marksData[s.id][sub+':'+q]=Math.min(10,Math.max(3,base+Math.floor(Math.random()*3)-1));
+    });
+  });
+});
+
+var assignments=[
+  {id:1,title:'Network Layer Assignment',desc:'Explain OSI model layers with diagrams.',subject:'OS',deadline:'2026-04-28T23:59',marks:10,uploads:{},versions:{}},
+  {id:2,title:'Process Scheduling',desc:'Compare FCFS, SJF, Round Robin with examples.',subject:'OS',deadline:'2026-05-05T23:59',marks:10,uploads:{},versions:{}},
+  {id:3,title:'Memory Management',desc:'Explain paging and segmentation.',subject:'OS',deadline:'2026-04-20T23:59',marks:10,uploads:{},versions:{}},
+];
+var nextAssignId=4;
+var feedbackData=[];
+var qrGenerated=false;
+var qrExpiry=null;
+var reminderSent={};
+
+// Teacher menus
+var teacherMenus=[
+  {id:'profile',icon:'👤',label:'Profile'},
+  {id:'qr-attendance',icon:'📷',label:'QR Attendance'},
+  {id:'attendance',icon:'✅',label:'Manual Attendance'},
+  {id:'marks',icon:'📊',label:'Marks'},
+  {id:'analytics',icon:'🧠',label:'Class Analytics'},
+  {id:'assignments',icon:'📋',label:'Assignments'},
+  {id:'timetable',icon:'🗓️',label:'Smart Timetable'},
+  {id:'schedule',icon:'📅',label:'Exam Schedule'},
+  {id:'calendar',icon:'📆',label:'Academic Calendar'},
+  {id:'lesson',icon:'📖',label:'Lesson Plan'},
+  {id:'feedback',icon:'💬',label:'Feedback'},
+  {id:'notifications',icon:'🔔',label:'Notifications'},
+  {id:'directory',icon:'📂',label:'Directory'},
+  {id:'events',icon:'🎉',label:'Events'},
+];
+var studentMenus=[
+  {id:'profile',icon:'👤',label:'Profile'},
+  {id:'attendance',icon:'✅',label:'Attendance'},
+  {id:'academic-register',icon:'📅',label:'Academic Register'},
+  {id:'marks',icon:'📊',label:'Marks'},
+  {id:'ai-analytics',icon:'🧠',label:'AI Analytics'},
+  {id:'assignments',icon:'📋',label:'Assignments'},
+  {id:'timetable',icon:'🗓️',label:'Smart Timetable'},
+  {id:'schedule',icon:'📆',label:'Exam Schedule'},
+  {id:'notifications',icon:'🔔',label:'Reminders'},
+  {id:'feedback',icon:'💬',label:'Feedback'},
+  {id:'backlogs',icon:'⚠️',label:'Backlogs'},
+  {id:'library',icon:'📚',label:'Library Books'},
+  {id:'fees',icon:'💰',label:'Fee Details'},
+  {id:'hostel',icon:'🏠',label:'Hostel Request'},
+  {id:'resources',icon:'🔗',label:'Resources'},
+  {id:'directory',icon:'📂',label:'Directory'},
+];
+
+// ═══════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════
+function doLogin(type){
+  var u=document.getElementById(type==='teacher'?'t-user':'s-user').value.trim().toLowerCase();
+  var p=document.getElementById(type==='teacher'?'t-pass':'s-pass').value.trim();
+  var errEl=document.getElementById(type==='teacher'?'t-err':'s-err');
+  errEl.textContent='';
+  if(type==='teacher'&&teacherAccounts[u]&&teacherAccounts[u].pass===p){
+    role='teacher';currentUser=teacherAccounts[u];currentUser.username=u;
+    launch('👩‍🏫 '+currentUser.name);
+  } else if(type==='student'&&studentAccounts[u]&&studentAccounts[u].pass===p){
+    role='student';currentUser=studentAccounts[u];currentUser.username=u;
+    launch('👨‍🎓 '+currentUser.fullName);
+  } else {errEl.textContent='Invalid credentials. Please try again.';}
+}
+function launch(name){
+  document.getElementById('login-page').style.display='none';
+  var d=document.getElementById('dashboard');d.style.display='flex';
+  document.getElementById('welcome-name').textContent=name;
+  buildSidebar();showSection('profile');
+}
+function doLogout(){
+  role=null;currentUser=null;
+  document.getElementById('login-page').style.display='block';
+  document.getElementById('dashboard').style.display='none';
+  ['t-user','t-pass','s-user','s-pass'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+}
+function buildSidebar(){
+  var menus=role==='teacher'?teacherMenus:studentMenus;
+  var sb=document.getElementById('sidebar');
+  sb.innerHTML='<h4>Navigation</h4>';
+  menus.forEach(function(m){
+    var a=document.createElement('a');
+    a.innerHTML='<span class="icon">'+m.icon+'</span><span class="label-text">'+m.label+'</span>';
+    a.onclick=function(){showSection(m.id);};
+    a.id='menu-'+m.id;sb.appendChild(a);
+  });
+}
+function setActive(id){
+  document.querySelectorAll('.sidebar a').forEach(function(a){a.classList.remove('active');});
+  var el=document.getElementById('menu-'+id);if(el)el.classList.add('active');
+}
+function showSection(id){
+  setActive(id);
+  var c=document.getElementById('content');
+  if(role==='teacher'){
+    if(id==='profile')c.innerHTML=teacherProfile();
+    else if(id==='qr-attendance')c.innerHTML=qrAttendance();
+    else if(id==='attendance')c.innerHTML=teacherAttendance();
+    else if(id==='marks')c.innerHTML=teacherMarks();
+    else if(id==='analytics')c.innerHTML=classAnalytics();
+    else if(id==='assignments')c.innerHTML=teacherAssignments();
+    else if(id==='timetable')c.innerHTML=smartTimetable();
+    else if(id==='schedule')c.innerHTML=examSchedule();
+    else if(id==='calendar')c.innerHTML=academicCalendar();
+    else if(id==='lesson')c.innerHTML=lessonPlan();
+    else if(id==='feedback')c.innerHTML=feedbackSection(true);
+    else if(id==='notifications')c.innerHTML=notificationsSection();
+    else if(id==='directory')c.innerHTML=directory();
+    else if(id==='events')c.innerHTML=events();
+    else c.innerHTML='<div class="section-title">'+id+'</div><p style="color:var(--muted)">Coming soon.</p>';
+  } else {
+    if(id==='profile')c.innerHTML=studentProfile();
+    else if(id==='attendance')c.innerHTML=studentAttendance();
+    else if(id==='academic-register')c.innerHTML=academicRegister();
+    else if(id==='marks')c.innerHTML=studentMarks();
+    else if(id==='ai-analytics')c.innerHTML=aiAnalytics();
+    else if(id==='assignments')c.innerHTML=studentAssignments();
+    else if(id==='timetable')c.innerHTML=smartTimetable();
+    else if(id==='schedule')c.innerHTML=examSchedule();
+    else if(id==='notifications')c.innerHTML=notificationsSection();
+    else if(id==='feedback')c.innerHTML=feedbackSection(false);
+    else if(id==='backlogs')c.innerHTML=backlogs();
+    else if(id==='library')c.innerHTML=library();
+    else if(id==='fees')c.innerHTML=feeDetails();
+    else if(id==='hostel')c.innerHTML=hostelRequest();
+    else if(id==='resources')c.innerHTML=resources();
+    else if(id==='directory')c.innerHTML=directory();
+    else c.innerHTML='<div class="section-title">'+id+'</div><p style="color:var(--muted)">Coming soon.</p>';
+  }
+}
+
+// ═══════════════════════════════════════════════
+// PROFILES
+// ═══════════════════════════════════════════════
+function teacherProfile(){
+  var t=currentUser;
+  return '<div class="section-title">👤 Teacher Profile</div>'+
+  '<div class="card"><div style="display:flex;gap:16px;align-items:center;margin-bottom:16px">'+
+  '<div style="width:64px;height:64px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:28px;border:3px solid var(--green)">👩‍🏫</div>'+
+  '<div><div style="font-weight:700;font-size:16px">'+t.name+'</div><div style="font-size:12px;color:var(--muted)">Dept. of '+t.dept+' | ABC College</div>'+
+  '<span class="badge badge-green">'+t.fullSubject+'</span></div></div>'+
+  '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'+
+  ps('Employee ID',t.empId)+ps('Subject',t.subject+' — '+t.fullSubject)+
+  ps('Designation','Associate Professor')+ps('Email',t.username+'@abccollege.edu')+
+  ps('Mobile','98765'+t.empId.slice(-5))+ps('Department',t.dept)+
+  '</div></div>';
+}
+function studentProfile(){
+  var s=currentUser;
+  return '<div class="section-title">👤 Student Profile</div>'+
+  '<div class="card"><div style="display:flex;gap:16px;align-items:center;margin-bottom:16px">'+
+  '<div style="width:64px;height:64px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:28px;border:3px solid var(--green)">👨‍🎓</div>'+
+  '<div><div style="font-weight:700;font-size:16px">'+s.fullName+'</div><div style="font-size:12px;color:var(--muted)">B.Tech CSE | '+s.year+' | Section '+s.section+' | ABC College</div>'+
+  '<span class="badge badge-blue">'+s.rollNo+'</span></div></div>'+
+  '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'+
+  ps('Roll Number',s.rollNo)+ps('Hall Ticket','2109-21-733-'+s.rollNo.slice(-3))+
+  ps('Year / Section',s.year+' / Section '+s.section)+ps('Email',s.username+'@student.abccollege.edu')+
+  ps('Date of Birth','15-Aug-2003')+ps('Mobile','9000000'+s.rollNo.slice(-3))+
+  ps('Father Name',s.fullName.split(' ')[0]+' Senior')+ps('Address','Hyderabad, Telangana')+
+  '</div></div>';
+}
+function ps(label,val){return '<div class="profile-section"><div class="lbl">'+label+'</div><div style="font-size:13px;font-weight:500">'+val+'</div></div>';}
+
+// ═══════════════════════════════════════════════
+// QR ATTENDANCE (Teacher)
+// ═══════════════════════════════════════════════
+function qrAttendance(){
+  var sub=currentUser.subject;
+  var qrActive=qrGenerated&&qrExpiry&&new Date()<qrExpiry;
+  var timeLeft=qrActive?Math.round((qrExpiry-new Date())/1000):0;
+  return '<div class="section-title">📷 QR Code Attendance</div>'+
+  '<div class="card" style="text-align:center;padding:28px">'+
+  '<div style="font-size:13px;color:var(--muted);margin-bottom:16px">Generate a QR code for students to scan and mark attendance for <strong>'+sub+'</strong></div>'+
+  (qrActive?
+    '<div class="qr-box" id="qr-box"><div class="qr-scan-anim"></div><div class="qr-inner">⬛📱⬛</div><div>'+sub+' Attendance</div><div style="font-size:11px;font-weight:400;color:var(--muted)">Valid for <span id="qr-countdown">'+timeLeft+'</span>s</div></div>'+
+    '<div style="margin-top:14px"><span class="badge badge-green" style="font-size:13px">✅ QR Active — Scan to attend</span></div>'+
+    '<div style="margin-top:10px;font-size:12px;color:var(--muted)">Geo-location check: <span class="geo-badge">📍 Classroom A-201 (within 50m)</span></div>'
+    :
+    '<div style="width:180px;height:180px;margin:0 auto;background:#f9fafb;border:2px dashed var(--border);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:60px;color:var(--border)">📷</div>'+
+    '<div style="margin-top:14px;color:var(--muted);font-size:13px">No active QR code</div>'
+  )+
+  '<div style="margin-top:20px;display:flex;gap:10px;justify-content:center">'+
+  '<button class="btn btn-green" onclick="generateQR()">🔄 Generate QR Code</button>'+
+  '<button class="btn btn-outline" onclick="showSection(\'attendance\')">📝 Manual Attendance</button>'+
+  '</div></div>'+
+  '<div class="card" style="margin-top:16px"><div style="font-weight:600;margin-bottom:12px;color:var(--green-dark)">📊 Today\'s Attendance Status</div>'+
+  '<table><thead><tr><th>Student</th><th>Roll No</th><th>Status</th><th>Method</th><th>Time</th></tr></thead><tbody>'+
+  students.map(function(s,i){
+    var p=Math.random()>0.3;
+    return '<tr><td>'+s.name+'</td><td>'+s.id+'</td><td>'+(p?'<span class="badge badge-green">Present</span>':'<span class="badge badge-red">Absent</span>')+'</td><td>'+(p?'<span class="badge badge-blue">QR Scan</span>':'—')+'</td><td>'+(p?'09:'+(10+i*2)+' AM':'—')+'</td></tr>';
+  }).join('')+
+  '</tbody></table></div>';
+}
+var qrTimer=null;
+function generateQR(){
+  qrGenerated=true;
+  qrExpiry=new Date(new Date().getTime()+120000);
+  showSection('qr-attendance');
+  if(qrTimer)clearInterval(qrTimer);
+  qrTimer=setInterval(function(){
+    var el=document.getElementById('qr-countdown');
+    if(el){var left=Math.round((qrExpiry-new Date())/1000);if(left<=0){clearInterval(qrTimer);showSection('qr-attendance');}else el.textContent=left;}
+    else clearInterval(qrTimer);
+  },1000);
+}
+
+// ═══════════════════════════════════════════════
+// MANUAL ATTENDANCE (Teacher)
+// ═══════════════════════════════════════════════
+function teacherAttendance(){
+  var sub=currentUser.subject;
+  var html='<div class="section-title">✅ Mark Attendance — '+sub+'</div>';
+  html+='<div class="card" style="margin-bottom:12px"><div class="form-row"><div class="form-group"><label>Date</label><input type="date" id="att-date" value="2026-04-29"/></div><div class="form-group"><label>Subject</label><input value="'+sub+'" disabled/></div></div></div>';
+  html+='<div class="card"><table><thead><tr><th>Roll No</th><th>Student Name</th><th>Present</th><th>Action</th></tr></thead><tbody>';
+  students.forEach(function(s){
+    html+='<tr><td style="font-family:\'JetBrains Mono\',monospace">'+s.id+'</td><td>'+s.name+'</td><td><div class="att-check present" id="chk-'+s.id+'" onclick="toggleAtt(\''+s.id+'\')">✓</div></td><td><span id="chk-status-'+s.id+'" class="badge badge-green" style="font-size:11px">Present</span></td></tr>';
+  });
+  html+='</tbody></table></div>';
+  html+='<div style="display:flex;gap:10px;margin-top:12px"><button class="btn btn-green" onclick="saveAtt()">💾 Save Attendance</button><button class="btn btn-outline" onclick="markAll(true)">✅ Mark All Present</button><button class="btn btn-outline" onclick="markAll(false)">❌ Mark All Absent</button></div>';
+  html+='<span id="att-saved" style="color:var(--green);font-size:12px;margin-left:8px;font-weight:600"></span>';
+  return html;
+}
+function toggleAtt(id){
+  var el=document.getElementById('chk-'+id);var st=document.getElementById('chk-status-'+id);
+  if(el.classList.contains('present')){el.classList.remove('present');el.classList.add('absent');el.textContent='✗';st.className='badge badge-red';st.textContent='Absent';}
+  else{el.classList.remove('absent');el.classList.add('present');el.textContent='✓';st.className='badge badge-green';st.textContent='Present';}
+}
+function markAll(present){students.forEach(function(s){var el=document.getElementById('chk-'+s.id);var st=document.getElementById('chk-status-'+s.id);if(present){el.className='att-check present';el.textContent='✓';st.className='badge badge-green';st.textContent='Present';}else{el.className='att-check absent';el.textContent='✗';st.className='badge badge-red';st.textContent='Absent';}});}
+function saveAtt(){var el=document.getElementById('att-saved');el.textContent='✅ Attendance saved successfully!';setTimeout(function(){el.textContent='';},3000);}
+
+// ═══════════════════════════════════════════════
+// MARKS (Teacher)
+// ═══════════════════════════════════════════════
+function teacherMarks(){
+  var sub=currentUser.subject;
+  var html='<div class="section-title">📊 Marks — '+sub+'</div>';
+  html+='<div class="tabs"><div class="tab active" onclick="switchTabId(\'assign-marks\',\'view-assign-uploads\',this)">Assign / Edit Marks</div><div class="tab" onclick="switchTabId(\'view-assign-uploads\',\'assign-marks\',this)">Assignment Submissions</div></div>';
+  html+='<div id="assign-marks"><div class="card" style="overflow-x:auto"><table><thead><tr><th>Student</th><th>Question</th><th>Marks /10</th><th>Action</th></tr></thead><tbody>';
+  students.forEach(function(s){
+    questionNames.forEach(function(q,qi){
+      var key=sub+':'+q;
+      html+='<tr><td>'+s.name+'</td><td>'+q+'</td><td><input class="marks-input" type="number" min="0" max="10" id="mk-'+s.id+'-'+qi+'" value="'+(marksData[s.id][key]||0)+'" /></td><td style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-green btn-sm" onclick="saveMark(\''+s.id+'\',\''+sub+':'+q+'\','+qi+')">Save</button><button class="btn btn-red btn-sm" onclick="delMark(\''+s.id+'\',\''+sub+':'+q+'\','+qi+')">Remove</button></td></tr>';
+    });
+  });
+  html+='</tbody></table></div></div>';
+  html+='<div id="view-assign-uploads" style="display:none"><p style="color:var(--muted);font-size:13px;margin-bottom:12px">Student submissions for grading:</p>';
+  assignments.forEach(function(a){
+    html+='<div class="assign-card"><div style="font-weight:600">'+a.title+'</div><div class="meta">Deadline: '+new Date(a.deadline).toLocaleString()+'</div>';
+    var hasSub=false;
+    students.forEach(function(s){
+      if(a.uploads&&a.uploads[s.id]){hasSub=true;
+        html+='<div style="display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap;font-size:13px">'+
+        '<span>'+s.name+'</span><span class="badge badge-green">Submitted</span>'+
+        (a.uploads[s.id].plagScore!==undefined?'<span class="badge '+(a.uploads[s.id].plagScore<20?'badge-green':a.uploads[s.id].plagScore<50?'badge-amber':'badge-red')+'">Plag: '+a.uploads[s.id].plagScore+'%</span>':'')+
+        '<input class="marks-input" type="number" min="0" max="'+a.marks+'" id="subm-'+a.id+'-'+s.id+'" value="'+(a.uploads[s.id].grade||0)+'" style="width:56px"/>'+
+        '<span style="font-size:11px">/ '+a.marks+'</span>'+
+        '<button class="btn btn-green btn-sm" onclick="gradeSubmission('+a.id+',\''+s.id+'\')">Grade</button>'+
+        '<textarea id="comment-'+a.id+'-'+s.id+'" placeholder="Inline comment..." style="flex:1;min-width:180px;height:36px;border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:12px;font-family:inherit;resize:none">'+( a.uploads[s.id].comment||'')+'</textarea>'+
+        '<button class="btn btn-outline btn-sm" onclick="saveComment('+a.id+',\''+s.id+'\')">💬</button>'+
+        '</div>';
+      }
+    });
+    if(!hasSub)html+='<div style="font-size:12px;color:var(--muted);margin-top:6px">No submissions yet.</div>';
+    html+='</div>';
+  });
+  html+='</div>';
+  return html;
+}
+function saveMark(sid,key,qi){marksData[sid][key]=parseInt(document.getElementById('mk-'+sid+'-'+qi).value)||0;showToast('Marks saved!');}
+function delMark(sid,key,qi){marksData[sid][key]=0;document.getElementById('mk-'+sid+'-'+qi).value=0;showToast('Marks removed.');}
+function gradeSubmission(aid,sid){var a=assignments.find(function(x){return x.id===aid;});var val=parseInt(document.getElementById('subm-'+aid+'-'+sid).value)||0;if(a&&a.uploads[sid]){a.uploads[sid].grade=val;}showToast('Grade saved!');}
+function saveComment(aid,sid){var a=assignments.find(function(x){return x.id===aid;});var el=document.getElementById('comment-'+aid+'-'+sid);if(a&&a.uploads[sid]&&el){a.uploads[sid].comment=el.value;}showToast('Comment saved!');}
+function switchTabId(showId,hideId,el){
+  document.getElementById(showId).style.display='block';
+  document.getElementById(hideId).style.display='none';
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  el.classList.add('active');
+}
+
+// ═══════════════════════════════════════════════
+// CLASS ANALYTICS (Teacher) — Heatmap
+// ═══════════════════════════════════════════════
+function classAnalytics(){
+  var sub=currentUser.subject;
+  var html='<div class="section-title">🧠 Class Performance Analytics — '+sub+'</div>';
+  // Heatmap
+  html+='<div class="card"><div style="font-weight:600;margin-bottom:12px">📊 Class Marks Heatmap</div>';
+  html+='<div class="heatmap-grid">';
+  html+='<div class="heatmap-cell header">Student</div>';
+  questionNames.forEach(function(q){html+='<div class="heatmap-cell header">'+q+'</div>';});
+  students.forEach(function(s){
+    html+='<div class="heatmap-cell" style="font-weight:600;font-size:11px">'+s.name.split(' ')[0]+'</div>';
+    questionNames.forEach(function(q){
+      var key=sub+':'+q;var m=marksData[s.id][key]||0;
+      var cls=m>=9?'h100':m>=7?'h80':m>=5?'h60':m>=3?'h40':'hlow';
+      html+='<div class="heatmap-cell '+cls+'">'+m+'/10</div>';
+    });
+  });
+  html+='</div></div>';
+  // Class averages chart
+  html+='<div class="card"><div style="font-weight:600;margin-bottom:14px">📈 Average Marks Per Question</div><div class="chart-bar-wrap">';
+  questionNames.forEach(function(q){
+    var key=sub+':'+q;
+    var avg=students.reduce(function(a,s){return a+(marksData[s.id][key]||0);},0)/students.length;
+    var pct=avg*10;var cls=avg>=7?'':'warn';
+    html+='<div class="chart-bar-row"><div class="sub-label" style="width:80px">'+q+'</div><div class="chart-bar-outer"><div class="chart-bar-inner '+cls+'" style="width:'+pct+'%"></div></div><div class="chart-bar-val">'+avg.toFixed(1)+'/10</div></div>';
+  });
+  html+='</div></div>';
+  // Weak students
+  html+='<div class="card"><div style="font-weight:600;margin-bottom:12px">⚠️ Students Needing Attention</div>';
+  students.forEach(function(s){
+    var total=questionNames.reduce(function(a,q){return a+(marksData[s.id][sub+':'+q]||0);},0);
+    var avg=total/questionNames.length;
+    if(avg<7){
+      html+='<div class="ai-tip"><div class="ai-icon">⚠️</div><div class="ai-text"><strong>'+s.name+'</strong> — Average: '+avg.toFixed(1)+'/10. Recommend extra attention on weak units.</div></div>';
+    }
+  });
+  html+='</div>';
+  return html;
+}
+
+// ═══════════════════════════════════════════════
+// TEACHER ASSIGNMENTS
+// ═══════════════════════════════════════════════
+function teacherAssignments(){
+  var sub=currentUser.subject;
+  var html='<div class="section-title">📋 Assignments — '+sub+'</div>';
+  html+='<div class="card"><div style="font-weight:600;margin-bottom:12px">➕ Create New Assignment</div>';
+  html+='<div class="form-group"><label>Title</label><input id="a-title" placeholder="Assignment title"/></div>';
+  html+='<div class="form-group"><label>Questions / Description</label><textarea id="a-desc" placeholder="Enter assignment questions..."></textarea></div>';
+  html+='<div class="form-row"><div class="form-group"><label>Deadline</label><input type="datetime-local" id="a-deadline"/></div><div class="form-group"><label>Max Marks</label><input type="number" id="a-marks" value="10" min="1"/></div></div>';
+  html+='<button class="btn btn-green" onclick="addAssignment()">Add Assignment</button></div>';
+  html+='<div style="margin-top:16px;font-weight:600;margin-bottom:10px;color:var(--green-dark)">📂 Existing Assignments</div>';
+  assignments.forEach(function(a){
+    var over=new Date()>new Date(a.deadline);
+    html+='<div class="assign-card"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-weight:600">'+a.title+'</span><span class="badge '+(over?'badge-red':'badge-green')+'">'+(over?'Closed':'Open')+'</span></div>';
+    html+='<div class="meta">'+a.desc+'</div><div class="meta">Deadline: '+new Date(a.deadline).toLocaleString()+' | Max: '+a.marks+' marks</div>';
+    html+='<div style="margin-top:8px;display:flex;gap:8px"><button class="btn btn-outline btn-sm" onclick="editAssign('+a.id+')">✏️ Edit</button><button class="btn btn-red btn-sm" onclick="delAssign('+a.id+')">🗑️ Delete</button></div></div>';
+  });
+  return html;
+}
+function addAssignment(){
+  var t=document.getElementById('a-title').value.trim();var d=document.getElementById('a-desc').value.trim();var dl=document.getElementById('a-deadline').value;var m=document.getElementById('a-marks').value;
+  if(!t||!d||!dl){alert('Please fill all fields.');return;}
+  assignments.push({id:nextAssignId++,title:t,desc:d,subject:currentUser.subject,deadline:dl,marks:parseInt(m)||10,uploads:{},versions:{}});
+  showSection('assignments');
+}
+function delAssign(id){if(confirm('Delete this assignment?')){assignments=assignments.filter(function(a){return a.id!==id;});showSection('assignments');}}
+function editAssign(id){var a=assignments.find(function(x){return x.id===id;});if(!a)return;var nt=prompt('Edit title:',a.title);if(nt)a.title=nt;var nd=prompt('Edit description:',a.desc);if(nd)a.desc=nd;showSection('assignments');}
+
+// ═══════════════════════════════════════════════
+// STUDENT ATTENDANCE
+// ═══════════════════════════════════════════════
+function studentAttendance(){
+  var sid=currentUser.rollNo;
+  var html='<div class="section-title">✅ My Attendance</div>';
+  var ta=0,th=0;
+  html+='<div class="stat-row">';
+  var overallArr=[];
+  subjects.forEach(function(sub){
+    var attended=0,held=dates.length;
+    dates.forEach(function(d){if(attData[sub][d]&&attData[sub][d][sid])attended++;});
+    var pct=Math.round(attended/held*100);overallArr.push(pct);ta+=attended;th+=held;
+  });
+  var overall=Math.round(ta/th*100);
+  html+='<div class="stat"><div class="num">'+overall+'%</div><div class="lbl">Overall</div></div>';
+  html+='<div class="stat"><div class="num">'+ta+'</div><div class="lbl">Attended</div></div>';
+  html+='<div class="stat"><div class="num">'+th+'</div><div class="lbl">Total Classes</div></div>';
+  var shortage=subjects.filter(function(sub){var a=0;dates.forEach(function(d){if(attData[sub][d]&&attData[sub][d][sid])a++;});return Math.round(a/dates.length*100)<75;}).length;
+  html+='<div class="stat"><div class="num" style="color:'+(shortage>0?'var(--red)':'var(--green)')+'">'+shortage+'</div><div class="lbl">Shortage</div></div>';
+  html+='</div>';
+  html+='<div class="card" style="overflow-x:auto"><table><thead><tr><th>Subject</th><th>Attended</th><th>Held</th><th>%</th><th>Status</th><th>Need for 75%</th></tr></thead><tbody>';
+  subjects.forEach(function(sub){
+    var attended=0,held=dates.length;
+    dates.forEach(function(d){if(attData[sub][d]&&attData[sub][d][sid])attended++;});
+    var pct=Math.round(attended/held*100);
+    var cls=pct>=75?'ok':pct>=60?'warn':'bad';
+    var badge=pct>=75?'<span class="badge badge-green">Good ✅</span>':pct>=60?'<span class="badge badge-amber">Low ⚠️</span>':'<span class="badge badge-red">Shortage ❌</span>';
+    var need=pct<75?Math.ceil((0.75*held-attended)/(1-0.75)):0;
+    html+='<tr><td>'+sub+'</td><td>'+attended+'</td><td>'+held+'</td><td class="pct '+cls+'">'+pct+'%</td><td>'+badge+'</td><td style="font-size:12px">'+(need>0?'<span style="color:var(--red)">Attend '+need+' more</span>':'<span style="color:var(--green)">✓ OK</span>')+'</td></tr>';
+  });
+  html+='</tbody></table></div>';
+  return html;
+}
+
+// ═══════════════════════════════════════════════
+// ACADEMIC REGISTER
+// ═══════════════════════════════════════════════
+function academicRegister(){
+  var sid=currentUser.rollNo;
+  var html='<div class="section-title">📅 Academic Register — Day Wise</div>';
+  subjects.forEach(function(sub){
+    html+='<div class="card" style="margin-bottom:14px"><div style="font-weight:600;margin-bottom:10px;color:var(--green-dark)">'+sub+'</div>';
+    html+='<div style="display:flex;flex-wrap:wrap;gap:6px">';
+    dates.forEach(function(d){
+      var p=attData[sub][d]&&attData[sub][d][sid];
+      html+='<div style="text-align:center;padding:6px 10px;border-radius:8px;background:'+(p?'var(--green-light)':'#fce8e8')+';color:'+(p?'var(--green)':'var(--red)')+';font-size:11px;font-weight:600"><div>'+d+'</div><div>'+(p?'P':'A')+'</div></div>';
+    });
+    html+='</div></div>';
+  });
+  return html;
+}
+
+// ═══════════════════════════════════════════════
+// STUDENT MARKS
+// ═══════════════════════════════════════════════
+function studentMarks(){
+  var sid=currentUser.rollNo;
+  var html='<div class="section-title">📊 My Marks</div>';
+  html+='<div class="tabs">';
+  subjects.forEach(function(sub,i){html+='<div class="tab'+(i===0?' active':'')+'" onclick="switchMarksTab(\'marks-tab-'+sub+'\',this)">'+sub+'</div>';});
+  html+='</div>';
+  subjects.forEach(function(sub,i){
+    var total=0;
+    html+='<div id="marks-tab-'+sub+'" style="display:'+(i===0?'block':'none')+'"><div class="card"><table><thead><tr><th>Question</th><th>Obtained</th><th>Max</th><th>Performance</th></tr></thead><tbody>';
+    questionNames.forEach(function(q){
+      var m=marksData[sid][sub+':'+q]||0;total+=m;
+      var pct=m*10;var cls=pct>=70?'ok':pct>=50?'warn':'bad';
+      html+='<tr><td>'+q+'</td><td class="pct '+cls+'" style="font-family:\'JetBrains Mono\',monospace">'+m+'</td><td>10</td><td><div style="width:100px;height:8px;background:#f0f4f0;border-radius:20px;overflow:hidden"><div style="width:'+pct+'%;height:100%;background:'+(pct>=70?'var(--green)':pct>=50?'var(--amber)':'var(--red)')+';border-radius:20px"></div></div></td></tr>';
+    });
+    html+='<tr style="font-weight:700;background:var(--green-light)"><td>Total</td><td class="pct '+(total>=35?'ok':total>=25?'warn':'bad')+'" style="font-family:\'JetBrains Mono\',monospace">'+total+'</td><td>'+(questionNames.length*10)+'</td><td></td></tr>';
+    html+='</tbody></table></div></div>';
+  });
+  return html;
+}
+function switchMarksTab(showId,el){
+  subjects.forEach(function(sub){var d=document.getElementById('marks-tab-'+sub);if(d)d.style.display='none';});
+  document.getElementById(showId).style.display='block';
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  el.classList.add('active');
+}
+
+// ═══════════════════════════════════════════════
+// AI ANALYTICS (Student)
+// ═══════════════════════════════════════════════
+function aiAnalytics(){
+  var sid=currentUser.rollNo;
+  var html='<div class="section-title">🧠 AI Performance Analytics</div>';
+  // Subject-wise performance bar chart
+  html+='<div class="card"><div style="font-weight:600;margin-bottom:14px">📈 Subject-wise Performance Trend</div><div class="chart-bar-wrap">';
+  var weakSubjects=[];
+  subjects.forEach(function(sub){
+    var total=questionNames.reduce(function(a,q){return a+(marksData[sid][sub+':'+q]||0);},0);
+    var avg=total/questionNames.length;var pct=avg*10;
+    var cls=avg>=7?'':avg>=5?'warn':'bad';
+    if(avg<7)weakSubjects.push({sub:sub,avg:avg});
+    html+='<div class="chart-bar-row"><div class="sub-label">'+sub+'</div><div class="chart-bar-outer"><div class="chart-bar-inner '+cls+'" style="width:'+pct+'%"></div></div><div class="chart-bar-val">'+avg.toFixed(1)+'/10</div></div>';
+  });
+  html+='</div></div>';
+  // Weak subject detection
+  if(weakSubjects.length>0){
+    html+='<div class="card"><div style="font-weight:600;margin-bottom:12px;color:var(--red)">⚠️ Weak Subject Detection</div>';
+    weakSubjects.forEach(function(w){
+      html+='<div class="ai-tip"><div class="ai-icon">🎯</div><div class="ai-text"><strong>'+w.sub+'</strong> — You are scoring '+w.avg.toFixed(1)+'/10 average.<br>'+
+      (w.avg<5?'<strong>Critical:</strong> Revise all units urgently. Focus on Unit 3 basics first.':'<strong>Tip:</strong> You\'re close! Practice 2-3 mock questions daily.')+
+      '<br><span style="color:var(--green);font-size:11px">📚 Suggested: Revise Unit 3 → Practice previous year questions → Attempt mock test</span></div></div>';
+    });
+    html+='</div>';
+  }
+  // Predictive result
+  html+='<div class="card"><div style="font-weight:600;margin-bottom:12px">🔮 AI Predictive Result</div>';
+  var allAvg=subjects.reduce(function(acc,sub){return acc+questionNames.reduce(function(a,q){return a+(marksData[sid][sub+':'+q]||0);},0)/questionNames.length;},0)/subjects.length;
+  var predicted=allAvg>=8?'Distinction 🏆':allAvg>=6?'First Class 🥇':allAvg>=5?'Second Class 🥈':'At Risk ⚠️';
+  var predColor=allAvg>=8?'var(--green)':allAvg>=6?'var(--blue)':allAvg>=5?'var(--amber)':'var(--red)';
+  html+='<div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">'+
+  '<div style="font-size:32px;font-weight:700;color:'+predColor+'">'+predicted+'</div>'+
+  '<div><div style="font-size:13px;color:var(--muted)">Based on current performance</div>'+
+  '<div style="font-size:13px">Overall average: <strong>'+allAvg.toFixed(1)+'/10</strong></div></div></div>';
+  html+='<div style="margin-top:12px;font-size:12px;color:var(--muted)">* Prediction based on mid-semester marks. Final results may vary.</div></div>';
+  // Personalized suggestions
+  html+='<div class="card"><div style="font-weight:600;margin-bottom:12px">💡 Personalized Suggestions</div>';
+  var tips=['📖 Complete pending assignments before deadlines','📊 Revise weak subjects daily for 30 mins','🔄 Attempt previous year question papers','👥 Form study groups for problem-solving subjects','⏰ Maintain 75%+ attendance in all subjects'];
+  tips.forEach(function(tip){html+='<div class="ai-tip"><div class="ai-icon">💡</div><div class="ai-text">'+tip+'</div></div>';});
+  html+='</div>';
+  return html;
+}
+
+// ═══════════════════════════════════════════════
+// STUDENT ASSIGNMENTS (with plagiarism check)
+// ═══════════════════════════════════════════════
+function studentAssignments(){
+  var now=new Date();var sid=currentUser.rollNo;
+  var html='<div class="section-title">📋 Assignments</div>';
+  assignments.forEach(function(a){
+    var dl=new Date(a.deadline);var over=now>dl;var submitted=a.uploads&&a.uploads[sid];
+    var versions=a.versions&&a.versions[sid]?a.versions[sid]:[];
+    html+='<div class="assign-card"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-weight:600">'+a.title+'</span><span class="badge '+(over?'badge-red':'badge-green')+'">'+(over?'Deadline Passed':'Open')+'</span></div>';
+    html+='<div class="meta">'+a.desc+'</div><div class="meta">Deadline: '+dl.toLocaleString()+' | Max Marks: '+a.marks+'</div>';
+    if(submitted){
+      html+='<div style="margin-top:8px">';
+      html+='<div style="font-size:12px;color:var(--green);font-weight:600">✅ Submitted: '+a.uploads[sid].name+'</div>';
+      if(a.uploads[sid].grade!==undefined&&a.uploads[sid].grade>0)html+='<div style="font-size:12px;font-weight:700">📊 Grade: '+a.uploads[sid].grade+' / '+a.marks+'</div>';
+      if(a.uploads[sid].comment)html+='<div style="font-size:12px;background:var(--green-light);border-radius:6px;padding:6px 10px;margin-top:4px;color:var(--green-dark)">💬 Teacher: '+a.uploads[sid].comment+'</div>';
+      // Plagiarism result
+      if(a.uploads[sid].plagScore!==undefined){
+        var ps2=a.uploads[sid].plagScore;var plagCls=ps2<20?'safe':ps2<50?'moderate':'high';
+        html+='<div style="margin-top:8px"><div style="font-size:11px;color:var(--muted);margin-bottom:3px">Plagiarism Check: <span class="badge '+(ps2<20?'badge-green':ps2<50?'badge-amber':'badge-red')+'">'+ps2+'% similarity</span></div>';
+        html+='<div class="plagiarism-bar"><div class="plag-fill '+plagCls+'" style="width:'+ps2+'%"></div></div></div>';
+      }
+      // Resubmit (version tracking)
+      if(!over){
+        html+='<div style="margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="badge badge-purple">v'+(versions.length+1)+' (revision)</span><input type="file" id="refile-'+a.id+'" accept=".pdf" style="font-size:12px"/><button class="btn btn-outline btn-sm" onclick="resubmit('+a.id+')">🔄 Resubmit</button></div>';
+      }
+      html+='</div>';
+    } else if(!over){
+      html+='<div style="margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><input type="file" id="file-'+a.id+'" accept=".pdf" style="font-size:12px"/><button class="btn btn-green btn-sm" onclick="uploadAssign('+a.id+')">📤 Upload PDF</button></div>';
+    } else {
+      html+='<div style="margin-top:8px;font-size:12px;color:var(--red)">🔒 Deadline passed. Submission locked.</div>';
+    }
+    if(versions.length>0){
+      html+='<div style="margin-top:8px;font-size:11px;color:var(--muted)">📁 Version history: '+versions.map(function(v,i){return 'v'+(i+1)+': '+v;}).join(' → ')+'</div>';
+    }
+    html+='</div>';
+  });
+  return html;
+}
+function uploadAssign(aid){
+  var fi=document.getElementById('file-'+aid);
+  if(!fi||!fi.files||!fi.files[0]){alert('Please select a PDF file.');return;}
+  var f=fi.files[0];if(!f.name.endsWith('.pdf')){alert('Only PDF files allowed.');return;}
+  var a=assignments.find(function(x){return x.id===aid;});var sid=currentUser.rollNo;
+  if(a){
+    var plagScore=Math.floor(Math.random()*35);// simulate plagiarism check
+    a.uploads[sid]={name:f.name,grade:undefined,plagScore:plagScore,comment:''};
+    if(!a.versions[sid])a.versions[sid]=[];
+    a.versions[sid].push(f.name);
+  }
+  showSection('assignments');
+  showToast('📤 Uploaded! Plagiarism check: '+(plagScore||0)+'% similarity');
+}
+function resubmit(aid){
+  var fi=document.getElementById('refile-'+aid);
+  if(!fi||!fi.files||!fi.files[0]){alert('Please select a PDF file.');return;}
+  var f=fi.files[0];if(!f.name.endsWith('.pdf')){alert('Only PDF files allowed.');return;}
+  var a=assignments.find(function(x){return x.id===aid;});var sid=currentUser.rollNo;
+  if(a){
+    var plag=Math.floor(Math.random()*25);
+    if(!a.versions[sid])a.versions[sid]=[];
+    a.versions[sid].push(a.uploads[sid].name);// save old version
+    a.uploads[sid]={name:f.name,grade:a.uploads[sid].grade,plagScore:plag,comment:a.uploads[sid].comment};
+  }
+  showSection('assignments');showToast('🔄 Resubmission successful!');
+}
+
+// ═══════════════════════════════════════════════
+// SMART TIMETABLE
+// ═══════════════════════════════════════════════
+function smartTimetable(){
+  var html='<div class="section-title">🗓️ Smart Timetable</div>';
+  html+='<div class="card" style="margin-bottom:12px"><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">'+
+  '<span class="geo-badge">📍 Today: Wednesday, 29 Apr 2026</span>'+
+  '<span class="badge badge-amber">🔔 Reminders: Active</span>'+
+  '<span class="badge badge-blue">📅 Sync with Google Calendar</span></div></div>';
+  var days=['Mon','Tue','Wed','Thu','Fri','Sat'];
+  var periods=['P1\n8-9','P2\n9-10','Brk\n10-10:30','P3\n10:30-11:30','P4\n11:30-12:30','Lunch\n12:30-1:30','P5\n1:30-2:30','P6\n2:30-3:30'];
+  var tt={
+    'Mon':['Maths','OS','—','DBMS','DAA','—','DS','Lab'],
+    'Tue':['OS','Maths','—','DS','DIS','—','DMDA','Lab'],
+    'Wed':['DAA','DS','—','Maths','OS','—','DIS','—'],
+    'Thu':['DIS','DMDA','—','OS','Maths','—','DAA','Lab'],
+    'Fri':['DS','DAA','—','DIS','DMDA','—','Maths','—'],
+    'Sat':['Maths','OS','—','—','—','—','—','—'],
+  };
+  html+='<div class="card" style="overflow-x:auto"><div class="tt-grid">';
+  html+='<div class="tt-cell header" style="font-size:10px">Time</div>';
+  days.forEach(function(d){html+='<div class="tt-cell header">'+d+'</div>';});
+  periods.forEach(function(p,pi){
+    html+='<div class="tt-cell" style="font-size:10px;background:var(--bg)">'+p.replace('\n','<br>')+'</div>';
+    days.forEach(function(d){
+      var sub=tt[d][pi];
+      var isBreak=sub==='—'||p.includes('Brk')||p.includes('Lunch');
+      var isToday=d==='Wed';
+      html+='<div class="tt-cell'+(isBreak?' break-cell':' has-class')+(isToday&&!isBreak?' exam-cell':'')+'">'+sub+'</div>';
+    });
+  });
+  html+='</div></div>';
+  // Upcoming reminders
+  html+='<div class="card"><div style="font-weight:600;margin-bottom:12px">🔔 Upcoming Reminders</div>';
+  var reminders=[
+    {icon:'📝',type:'exam',text:'OS Exam on 11 May 2026 — 12 days away',time:'Exam reminder'},
+    {icon:'📋',type:'assign',text:'Network Layer Assignment due Apr 28 — PASSED',time:'Assignment'},
+    {icon:'📋',type:'assign',text:'Process Scheduling due May 5 — 6 days away',time:'Assignment'},
+    {icon:'✅',type:'attend',text:'Attendance in DIS is 62% — below 75% threshold',time:'Attendance alert'},
+  ];
+  reminders.forEach(function(r){
+    html+='<div class="notif-item"><div class="notif-icon '+r.type+'">'+r.icon+'</div><div><div class="notif-text">'+r.text+'</div><div class="notif-time">'+r.time+'</div></div></div>';
+  });
+  html+='</div>';
+  return html;
+}
+
+// ═══════════════════════════════════════════════
+// NOTIFICATIONS
+// ═══════════════════════════════════════════════
+function notificationsSection(){
+  var html='<div class="section-title">🔔 Notifications & Reminders</div>';
+  var notifs=[
+    {icon:'📅',type:'exam',title:'Mid-1 Exams Starting Soon',body:'Your Mid-1 examinations begin on 10 May 2026. Check the exam schedule and prepare accordingly.',time:'2 hours ago'},
+    {icon:'📋',type:'assign',title:'Assignment Deadline Approaching',body:'Process Scheduling assignment is due on 5 May 2026. Submit before the deadline to avoid lock.',time:'5 hours ago'},
+    {icon:'✅',type:'attend',title:'Attendance Warning — DIS',body:'Your attendance in DIS has dropped to 62%. You need to attend 4 more classes to reach 75%.',time:'Yesterday'},
+    {icon:'📊',type:'exam',title:'Marks Updated',body:'Your marks for OS Unit 2 have been updated. Check your Marks section.',time:'2 days ago'},
+    {icon:'🎉',type:'attend',title:'Technical Symposium 2026',body:'Register for Technical Symposium 2026 on 12-13 June. Visit Events section.',time:'3 days ago'},
+  ];
+  notifs.forEach(function(n){
+    html+='<div class="assign-card" style="display:flex;gap:12px;align-items:flex-start">'+
+    '<div style="width:40px;height:40px;border-radius:10px;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">'+n.icon+'</div>'+
+    '<div><div style="font-weight:600;font-size:13px">'+n.title+'</div><div style="font-size:12.5px;color:var(--muted);margin-top:3px">'+n.body+'</div><div style="font-size:11px;color:var(--muted);margin-top:4px">'+n.time+'</div></div></div>';
+  });
+  return html;
+}
+
+// ═══════════════════════════════════════════════
+// EXISTING SECTIONS
+// ═══════════════════════════════════════════════
+function examSchedule(){return '<div class="section-title">📆 Exam Schedule</div><div class="card"><table><thead><tr><th>Subject</th><th>Date</th><th>Time</th><th>Venue</th><th>Type</th></tr></thead><tbody><tr><td>Maths</td><td>10 May 2026</td><td>09:00 AM</td><td>Hall A</td><td><span class="badge badge-amber">Mid-1</span></td></tr><tr><td>OS</td><td>11 May 2026</td><td>09:00 AM</td><td>Hall B</td><td><span class="badge badge-amber">Mid-1</span></td></tr><tr><td>DIS</td><td>12 May 2026</td><td>09:00 AM</td><td>Hall A</td><td><span class="badge badge-amber">Mid-1</span></td></tr><tr><td>DAA</td><td>13 May 2026</td><td>09:00 AM</td><td>Hall C</td><td><span class="badge badge-amber">Mid-1</span></td></tr><tr><td>DS</td><td>14 May 2026</td><td>09:00 AM</td><td>Hall B</td><td><span class="badge badge-amber">Mid-1</span></td></tr><tr><td>DMDA</td><td>15 May 2026</td><td>09:00 AM</td><td>Hall D</td><td><span class="badge badge-amber">Mid-1</span></td></tr></tbody></table></div>';}
+function academicCalendar(){return '<div class="section-title">📆 Academic Calendar 2025–26</div><div class="card"><table><thead><tr><th>Event</th><th>From</th><th>To</th></tr></thead><tbody><tr><td>Orientation</td><td>01 Aug 2025</td><td>07 Aug 2025</td></tr><tr><td>Semester I Classes</td><td>08 Aug 2025</td><td>30 Nov 2025</td></tr><tr><td>Mid Examinations</td><td>15 Sep 2025</td><td>20 Sep 2025</td></tr><tr><td>Semester I End Exams</td><td>01 Dec 2025</td><td>20 Dec 2025</td></tr><tr><td>Winter Break</td><td>21 Dec 2025</td><td>03 Jan 2026</td></tr><tr><td>Semester II Classes</td><td>04 Jan 2026</td><td>30 Apr 2026</td></tr><tr><td>Mid-1 Exams</td><td>10 May 2026</td><td>15 May 2026</td></tr><tr><td>Mid-2 Exams</td><td>20 Jun 2026</td><td>25 Jun 2026</td></tr><tr><td>End Semester Exams</td><td>01 Jul 2026</td><td>20 Jul 2026</td></tr></tbody></table></div>';}
+function lessonPlan(){
+  var sub=role==='teacher'?currentUser.subject:'OS';
+  return '<div class="section-title">📖 Lesson Plan — '+sub+'</div><div class="card"><table><thead><tr><th>Unit</th><th>Topics</th><th>Hours</th><th>Status</th></tr></thead><tbody><tr><td>Unit I</td><td>Introduction, Basics</td><td>12</td><td><span class="badge badge-green">Completed</span></td></tr><tr><td>Unit II</td><td>Core Concepts</td><td>10</td><td><span class="badge badge-green">Completed</span></td></tr><tr><td>Unit III</td><td>Advanced Topics</td><td>10</td><td><span class="badge badge-amber">In Progress</span></td></tr><tr><td>Unit IV</td><td>Applications</td><td>10</td><td><span class="badge badge-red">Pending</span></td></tr><tr><td>Unit V</td><td>Case Studies</td><td>8</td><td><span class="badge badge-red">Pending</span></td></tr></tbody></table></div>';
+}
+function feedbackSection(isTeacher){
+  var html='<div class="section-title">💬 Feedback</div>';
+  if(!isTeacher){
+    html+='<div class="card"><div style="font-weight:600;margin-bottom:12px">Submit Feedback</div>';
+    html+='<div class="form-group"><label>Subject</label><select id="fb-sub">'+subjects.map(function(s){return'<option>'+s+'</option>';}).join('')+'</select></div>';
+    html+='<div class="form-group"><label>Rating</label><div class="star-row" id="stars">';
+    for(var i=1;i<=5;i++)html+='<span class="star" data-v="'+i+'" onclick="setStar('+i+')">★</span>';
+    html+='</div></div><div class="form-group"><label>Comments</label><textarea id="fb-text" placeholder="Your feedback..."></textarea></div>';
+    html+='<button class="btn btn-green" onclick="submitFeedback()">Submit Feedback</button><div id="fb-msg" style="color:var(--green);font-size:12px;margin-top:6px;font-weight:600"></div></div>';
+  }
+  if(feedbackData.length>0){
+    html+='<div style="margin-top:16px;font-weight:600;margin-bottom:8px">Received Feedback</div>';
+    feedbackData.forEach(function(fb){html+='<div class="assign-card"><div style="display:flex;gap:8px;align-items:center"><span class="badge badge-green">'+fb.subject+'</span><span style="color:#f5a623">'+('★').repeat(fb.rating)+('☆').repeat(5-fb.rating)+'</span></div><div style="margin-top:4px;font-size:13px">'+fb.comment+'</div></div>';});
+  } else if(isTeacher){html+='<div class="card" style="color:var(--muted)">No feedback received yet.</div>';}
+  return html;
+}
+var starVal=0;
+function setStar(v){starVal=v;document.querySelectorAll('.star').forEach(function(s,i){s.classList.toggle('on',i<v);});}
+function submitFeedback(){var sub=document.getElementById('fb-sub').value;var txt=document.getElementById('fb-text').value.trim();if(!txt||!starVal){alert('Please rate and enter comments.');return;}feedbackData.push({subject:sub,rating:starVal,comment:txt});document.getElementById('fb-msg').textContent='✅ Feedback submitted successfully!';document.getElementById('fb-text').value='';starVal=0;}
+function backlogs(){return '<div class="section-title">⚠️ Backlogs</div><div class="card" style="color:var(--muted)">✅ No active backlogs. All subjects cleared.</div>';}
+function library(){return '<div class="section-title">📚 Library Books</div><div class="card"><table><thead><tr><th>Book Title</th><th>Author</th><th>Issue Date</th><th>Due Date</th><th>Status</th></tr></thead><tbody><tr><td>Operating System Concepts</td><td>Silberschatz</td><td>01 Apr 2026</td><td>01 May 2026</td><td><span class="badge badge-green">Issued</span></td></tr><tr><td>DBMS by Navathe</td><td>Navathe</td><td>10 Mar 2026</td><td>10 Apr 2026</td><td><span class="badge badge-red">Overdue</span></td></tr></tbody></table></div>';}
+function feeDetails(){return '<div class="section-title">💰 Fee Details</div><div class="card"><table><thead><tr><th>Fee Type</th><th>Amount (₹)</th><th>Paid</th><th>Status</th></tr></thead><tbody><tr><td>Tuition Fee</td><td>85,000</td><td>85,000</td><td><span class="badge badge-green">Paid</span></td></tr><tr><td>Exam Fee</td><td>2,000</td><td>2,000</td><td><span class="badge badge-green">Paid</span></td></tr><tr><td>Transport Fee</td><td>15,000</td><td>0</td><td><span class="badge badge-red">Pending</span></td></tr><tr><td>Hostel Fee</td><td>40,000</td><td>20,000</td><td><span class="badge badge-amber">Partial</span></td></tr></tbody></table></div>';}
+function hostelRequest(){return '<div class="section-title">🏠 Hostel Request</div><div class="card"><div class="form-group"><label>Room Type Preference</label><select><option>Single</option><option>Double Sharing</option><option>Triple Sharing</option></select></div><div class="form-group"><label>Reason</label><textarea placeholder="Enter reason for hostel request..."></textarea></div><button class="btn btn-green">Submit Request</button></div><div class="card" style="margin-top:12px"><div style="font-weight:600;margin-bottom:8px">Current Status</div><div style="font-size:13px;color:var(--muted)">Room No: 204, Block B, Double Sharing</div></div>';}
+function resources(){return '<div class="section-title">🔗 Resources</div><div class="card"><table><thead><tr><th>Title</th><th>Subject</th><th>Type</th></tr></thead><tbody><tr><td>OS Notes Unit 1-3</td><td>OS</td><td><span class="badge badge-green">PDF</span></td></tr><tr><td>DBMS Slides</td><td>DBMS</td><td><span class="badge badge-amber">PPT</span></td></tr><tr><td>DAA Practice Problems</td><td>DAA</td><td><span class="badge badge-green">PDF</span></td></tr><tr><td>DS Video Lectures</td><td>DS</td><td><span class="badge badge-red">Video</span></td></tr></tbody></table></div>';}
+function directory(){return '<div class="section-title">📂 Faculty Directory</div><div class="card"><table><thead><tr><th>Name</th><th>Subject</th><th>Email</th><th>Username</th></tr></thead><tbody><tr><td>Prof. S. Rao</td><td>OS</td><td>teacher1@abccollege.edu</td><td>teacher1</td></tr><tr><td>Prof. K. Patel</td><td>DIS</td><td>teacher2@abccollege.edu</td><td>teacher2</td></tr><tr><td>Dr. M. Verma</td><td>DMDA</td><td>teacher3@abccollege.edu</td><td>teacher3</td></tr><tr><td>Prof. A. Reddy</td><td>DAA</td><td>teacher4@abccollege.edu</td><td>teacher4</td></tr><tr><td>Dr. L. Singh</td><td>DS</td><td>teacher5@abccollege.edu</td><td>teacher5</td></tr></tbody></table></div>';}
+function events(){return '<div class="section-title">🎉 Events & Activities</div><div class="card"><div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)"><div style="font-weight:600">Technical Symposium 2026</div><div style="font-size:12px;color:var(--muted)">12/06/2026 09:00 AM – 13/06/2026 04:00 PM | Auditorium</div></div><div><div style="font-weight:600">FDP – Transforming Learning through Technology</div><div style="font-size:12px;color:var(--muted)">26/04/2026 09:00 AM – 26/04/2026 05:00 PM | Seminar Hall | Hybrid</div></div></div>';}
+
+// ═══════════════════════════════════════════════
+// AI CHATBOT
+// ═══════════════════════════════════════════════
+function toggleChat(){
+  var panel=document.getElementById('chatbot-panel');
+  panel.classList.toggle('open');
+  if(panel.classList.contains('open'))document.getElementById('chat-in').focus();
+}
+function sendChat(){
+  var inp=document.getElementById('chat-in');var q=inp.value.trim();if(!q)return;
+  var msgs=document.getElementById('chat-msgs');
+  msgs.innerHTML+='<div class="msg-user">'+q+'</div>';
+  inp.value='';
+  setTimeout(function(){
+    var ans=getAIAnswer(q.toLowerCase());
+    msgs.innerHTML+='<div class="msg-bot">'+ans+'</div>';
+    msgs.scrollTop=msgs.scrollHeight;
+  },600);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+function getAIAnswer(q){
+  if(!currentUser)return "Please log in first!";
+  var sid=currentUser.rollNo;
+  // attendance
+  if(q.includes('attendance')){
+    if(q.includes('os')||q.includes('operating')){var sub='OS';var a=0;dates.forEach(function(d){if(attData[sub][d]&&attData[sub][d][sid])a++;});return '📊 Your attendance in OS is <strong>'+Math.round(a/dates.length*100)+'%</strong> ('+a+'/'+dates.length+' classes).';}
+    if(q.includes('dbms')||q.includes('dis')){var sub='DIS';var a=0;dates.forEach(function(d){if(attData[sub][d]&&attData[sub][d][sid])a++;});return '📊 Your attendance in DIS is <strong>'+Math.round(a/dates.length*100)+'%</strong>.';}
+    if(q.includes('daa')){var sub='DAA';var a=0;dates.forEach(function(d){if(attData[sub][d]&&attData[sub][d][sid])a++;});return '📊 Your attendance in DAA is <strong>'+Math.round(a/dates.length*100)+'%</strong>.';}
+    if(q.includes('ds')||q.includes('data str')){var sub='DS';var a=0;dates.forEach(function(d){if(attData[sub][d]&&attData[sub][d][sid])a++;});return '📊 Your attendance in DS is <strong>'+Math.round(a/dates.length*100)+'%</strong>.';}
+    var total=0,held=0;subjects.forEach(function(sub){dates.forEach(function(d){held++;if(attData[sub][d]&&attData[sub][d][sid])total++;});});return '📊 Your overall attendance is <strong>'+Math.round(total/held*100)+'%</strong> ('+total+'/'+held+' classes).';
+  }
+  // exam
+  if(q.includes('exam')||q.includes('next exam')){return '📅 Your next exam is <strong>OS on 11 May 2026 at 09:00 AM</strong> in Hall B. Mid-1 exams run from 10–15 May.';}
+  // weak subjects
+  if(q.includes('weak')||q.includes('struggling')||q.includes('poor')){
+    var weak=[];subjects.forEach(function(sub){var avg=questionNames.reduce(function(a,q2){return a+(marksData[sid][sub+':'+q2]||0);},0)/questionNames.length;if(avg<7)weak.push(sub+' ('+avg.toFixed(1)+'/10)');});
+    return weak.length>0?'⚠️ Your weak subjects are: <strong>'+weak.join(', ')+'</strong>. Focus on revising these!':'🎉 Great! No critically weak subjects detected.';
+  }
+  // marks
+  if(q.includes('marks')||q.includes('score')){var sub2='OS';var total2=questionNames.reduce(function(a,q2){return a+(marksData[sid][sub2+':'+q2]||0);},0);return '📊 Your marks in OS: <strong>'+total2+'/'+(questionNames.length*10)+'</strong>. Go to Marks section for full details.';}
+  // assignments
+  if(q.includes('assignment')||q.includes('pending')){var pend=assignments.filter(function(a){return new Date()<new Date(a.deadline)&&!(a.uploads&&a.uploads[sid]);});return pend.length>0?'📋 You have <strong>'+pend.length+' pending assignment(s)</strong>: '+pend.map(function(a){return a.title;}).join(', ')+'':'✅ All assignments submitted!';}
+  // timetable
+  if(q.includes('timetable')||q.includes('schedule today')||q.includes('class today')){return '📅 Today (Wednesday) you have: <strong>DAA, DS, Maths, OS, DIS</strong>. Check the Smart Timetable for full schedule.';}
+  // fee
+  if(q.includes('fee')||q.includes('dues')){return '💰 You have pending dues: Transport Fee (₹15,000) and partial Hostel Fee. Visit Fee Details section.';}
+  // hello
+  if(q.includes('hello')||q.includes('hi ')||q.startsWith('hi')||q.includes('hey')){return '👋 Hello '+currentUser.name+'! How can I help you today?';}
+  return '🤖 I can answer questions about your attendance, marks, exams, assignments, or timetable. Try: "What is my attendance in OS?" or "When is my next exam?"';
+}
+
+// ═══════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════
+function showToast(msg){
+  var t=document.createElement('div');
+  t.textContent=msg;
+  t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,.2);animation:fadein .3s ease';
+  document.body.appendChild(t);
+  setTimeout(function(){t.remove();},2500);
+}
+</script>
+</body>
+</html>
